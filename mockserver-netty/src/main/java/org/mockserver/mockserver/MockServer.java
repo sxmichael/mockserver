@@ -22,6 +22,7 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -40,8 +41,8 @@ public class MockServer implements Stoppable {
     private final List<Future<Channel>> channelOpenedFutures = new ArrayList<Future<Channel>>();
     private final SettableFuture<String> stopping = SettableFuture.<String>create();
     // netty
-    private final EventLoopGroup bossGroup = new NioEventLoopGroup();
-    private final EventLoopGroup workerGroup = new NioEventLoopGroup();
+    private final EventLoopGroup bossGroup = new NioEventLoopGroup(Integer.valueOf(Optional.ofNullable(System.getenv("N_THREADS")).orElse("4")));
+    private final EventLoopGroup workerGroup = new NioEventLoopGroup(Integer.valueOf(Optional.ofNullable(System.getenv("N_THREADS")).orElse("4")));
     private final ServerBootstrap serverBootstrap;
     private StopEventQueue stopEventQueue = new StopEventQueue();
 
